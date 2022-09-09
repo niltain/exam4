@@ -1,4 +1,6 @@
 function getAllCity() {
+    document.getElementById('displayDetail').style.display="block"
+
     $.ajax({
         type: "GET",
         url: "http://localhost:8080/api/cities",
@@ -39,6 +41,7 @@ function displayTable(data) {
 }
 
 function formCreate(data) {
+
     let result = ""
     result += "<form>"
     result += "<table border='1' style='margin: 50px auto'>"
@@ -109,6 +112,7 @@ function update(id) {
 
 
 function formUpdate(data) {
+    document.getElementById('displayDetail').style.display="none"
     let result = ""
     result += "<form>"
     result += "<table border='1' style='margin: 50px auto'>"
@@ -208,6 +212,7 @@ function updateCity() {
 
 
 function CreateCity() {
+
     let id = $('#id').val()
     let name = $('#name').val()
     let area = $('#area').val()
@@ -242,34 +247,27 @@ function CreateCity() {
 
 
 function getAllCountry() {
+
     $.ajax({
         type: "GET",
         url: "http://localhost:8080/api/countries",
         success: function (data) {
             document.getElementById("form").innerHTML = formCreate(data)
             document.getElementById("form").style.display = "block"
+            document.getElementById('displayDetail').style.display="none"
         }
     })
 }
 function detailCity(id) {
+    localStorage.setItem("idDetail",id)
+    let idDetail = localStorage.getItem("idDetail")
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/api/cities/"+id,
+        url: "http://localhost:8080/api/cities/"+idDetail,
         success: function (data) {
+            // document.getElementById("form").innerHTML = displayDetail(data)
             console.log(data)
-            document.getElementById("form").innerHTML = displayDetail(data)
-
-            $.ajax({
-                type: "GET",
-                url: "http://localhost:8080/api/cities/" + id,
-                success: function (data) {
-                    document.getElementById("name").value = data.name
-                    document.getElementById("area").value = data.area
-                    document.getElementById("population").value = data.population
-                    document.getElementById("gdp").value = data.gdp
-                    document.getElementById("description").value = data.description
-                }
-            })
+            displayDetail(data)
         }
     })
 }
@@ -292,5 +290,5 @@ function displayDetail(data) {
     result += "<th>" + data.country.name + "</th>"
     result += "</tr>"
     result += "</table>"
-    return result
+     document.getElementById('displayDetail').innerHTML= result
 }
